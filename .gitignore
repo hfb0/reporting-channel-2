@@ -26,3 +26,6 @@ lerna-debug.log*
 .settings/
 *.sublime-workspace
 .vscode
+
+#Database
+ormconfig.json
