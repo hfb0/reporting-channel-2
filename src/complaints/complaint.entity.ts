@@ -1,0 +1,39 @@
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+
+@Entity('complaints')
+class Complaint {
+  @PrimaryGeneratedColumn('uuid')
+  id: number;
+
+  @Column({ name: 'postal_code' })
+  postalCode: string;
+
+  @Column()
+  country: string;
+
+  @Column()
+  state: string;
+
+  @Column()
+  city: string;
+
+  @Column()
+  neighborhood: string;
+
+  @Column()
+  street: string;
+
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
+}
+
+export default Complaint;
