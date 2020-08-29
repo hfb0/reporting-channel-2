@@ -4,7 +4,10 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
+import User from '../users/user.entity';
 
 @Entity('complaints')
 class Complaint {
@@ -28,6 +31,10 @@ class Complaint {
 
   @Column()
   street: string;
+
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'user_id' })
+  user: User;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
