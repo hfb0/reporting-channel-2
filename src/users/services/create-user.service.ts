@@ -2,6 +2,7 @@ import { getRepository } from 'typeorm';
 import { hash, genSalt } from 'bcryptjs';
 
 import User from '../user.entity';
+import AppError from '../../shared/errors/app-error';
 
 interface Request {
   name: string;
@@ -19,7 +20,7 @@ class CreateUserService {
     });
 
     if (checkUserExists) {
-      throw new Error('User already exists!');
+      throw new AppError('User already exists!', 400);
     }
     const salt = await genSalt(10);
     const passwordHashed = await hash(password, salt);
