@@ -24,9 +24,6 @@ class User {
   password: string;
 
   @Column()
-  salt: string;
-
-  @Column()
   active: boolean;
 
   @CreateDateColumn({ name: 'created_at' })

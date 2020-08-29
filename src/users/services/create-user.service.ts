@@ -29,7 +29,6 @@ class CreateUserService {
       cpf,
       email,
       password: passwordHashed,
-      salt,
     });
 
     await usersRepository.save(user);

@@ -29,3 +29,6 @@ lerna-debug.log*
 
 #Database
 ormconfig.json
+
+# Env
+.env

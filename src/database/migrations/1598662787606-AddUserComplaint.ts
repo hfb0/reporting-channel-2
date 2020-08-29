@@ -12,7 +12,7 @@ export default class AddUserComplaint1598662787606
       'complaints',
       new TableColumn({
         name: 'user_id',
-        type: 'varchar',
+        type: 'uuid',
       }),
     );
 

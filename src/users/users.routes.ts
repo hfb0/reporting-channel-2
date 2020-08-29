@@ -12,7 +12,6 @@ userRouter.post('/', async (req, res) => {
     const user = await createUser.execute({ name, email, cpf, password });
 
     delete user.password;
-    delete user.salt;
 
     return res.json(user);
   } catch (err) {
