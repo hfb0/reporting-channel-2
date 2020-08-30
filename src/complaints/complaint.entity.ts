@@ -14,6 +14,18 @@ class Complaint {
   @PrimaryGeneratedColumn('uuid')
   id: number;
 
+  @Column()
+  title: string;
+
+  @Column()
+  description: string;
+
+  @Column()
+  latitude: number;
+
+  @Column()
+  longitude: number;
+
   @Column({ name: 'postal_code' })
   postalCode: string;
 
@@ -31,6 +43,12 @@ class Complaint {
 
   @Column()
   street: string;
+
+  @Column()
+  resolved: boolean;
+
+  @Column({ name: 'user_id' })
+  userId: string;
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'user_id' })
