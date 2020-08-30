@@ -1,10 +1,10 @@
-import { getRepository } from 'typeorm';
 import { compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
 
 import User from '../../users/user.entity';
 import authConfig from '../../config/auth.config';
 import AppError from '../../shared/errors/app-error';
+import IUserRepository from '../../users/repository/user-repository.interface';
 
 interface Request {
   email: string;
@@ -17,10 +17,10 @@ interface Reponse {
 }
 
 class CreateSessionService {
-  async execute({ email, password }: Request): Promise<Reponse> {
-    const userRepository = getRepository(User);
+  constructor(private userRepository: IUserRepository) {}
 
-    const user = await userRepository.findOne({ email });
+  async execute({ email, password }: Request): Promise<Reponse> {
+    const user = await this.userRepository.findByEmail(email);
 
     if (!user) {
       throw new AppError('Incorrect email/password combination.', 401);

@@ -1,8 +1,9 @@
-import { getRepository } from 'typeorm';
 import { hash, genSalt } from 'bcryptjs';
 
 import User from '../user.entity';
 import AppError from '../../shared/errors/app-error';
+import IUserRepository from '../repository/user-repository.interface';
+import CreateUserDTO from '../dto/create-user.dto';
 
 interface Request {
   name: string;
@@ -12,27 +13,22 @@ interface Request {
 }
 
 class CreateUserService {
-  public async execute({ name, cpf, email, password }: Request): Promise<User> {
-    const usersRepository = getRepository(User);
+  constructor(private userRepository: IUserRepository) {}
 
-    const checkUserExists = await usersRepository.findOne({
-      where: [{ email }, { cpf }],
-    });
+  public async execute(createUserDTO: CreateUserDTO): Promise<User> {
+    const checkUserExists = await this.userRepository.findByEmailOrCpf(
+      createUserDTO.email,
+      createUserDTO.cpf,
+    );
 
     if (checkUserExists) {
       throw new AppError('User already exists!', 400);
     }
+
     const salt = await genSalt(10);
-    const passwordHashed = await hash(password, salt);
+    createUserDTO.setPasswordHashed(await hash(createUserDTO.password, salt));
 
-    const user = usersRepository.create({
-      name,
-      cpf,
-      email,
-      password: passwordHashed,
-    });
-
-    await usersRepository.save(user);
+    const user = this.userRepository.create(createUserDTO);
 
     return user;
   }
