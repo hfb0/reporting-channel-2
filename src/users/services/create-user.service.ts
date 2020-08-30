@@ -1,4 +1,5 @@
 import { hash, genSalt } from 'bcryptjs';
+import { injectable, inject } from 'tsyringe';
 
 import User from '../user.entity';
 import AppError from '../../shared/errors/app-error';
@@ -12,8 +13,12 @@ interface Request {
   password: string;
 }
 
+@injectable()
 class CreateUserService {
-  constructor(private userRepository: IUserRepository) {}
+  constructor(
+    @inject('UserRepository')
+    private userRepository: IUserRepository,
+  ) {}
 
   public async execute(createUserDTO: CreateUserDTO): Promise<User> {
     const checkUserExists = await this.userRepository.findByEmailOrCpf(

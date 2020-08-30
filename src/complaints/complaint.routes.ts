@@ -1,9 +1,9 @@
 import { Router } from 'express';
+import { container } from 'tsyringe';
 import ensureAuth from '../shared/middlewares/ensure-auth';
 import CreateComplaintService from './services/create-complaint.service';
 import CreateComplaintDTO from './dto/create-complaint.dto';
 import MapquestService from '../mapquest/mapquest.service';
-import ComplaintRepository from './repository/complaint.repository';
 
 const complaintRouter = Router();
 
@@ -33,11 +33,8 @@ complaintRouter.post('/', async (req, res) => {
     address.street,
   );
 
-  const complaintRepository = new ComplaintRepository();
+  const createComplaintService = container.resolve(CreateComplaintService);
 
-  const createComplaintService = new CreateComplaintService(
-    complaintRepository,
-  );
   const complaint = await createComplaintService.execute(complaintDTO);
 
   return res.status(201).json(complaint);

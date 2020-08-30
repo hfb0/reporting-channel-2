@@ -1,6 +1,7 @@
 import { Router } from 'express';
+import { container } from 'tsyringe';
+
 import CreateUserService from './services/create-user.service';
-import UserRepository from './repository/user.repository';
 import CreateUserDTO from './dto/create-user.dto';
 
 const userRouter = Router();
@@ -13,8 +14,7 @@ userRouter.post('/', async (req, res) => {
     req.body.password,
   );
 
-  const userRepository = new UserRepository();
-  const createUser = new CreateUserService(userRepository);
+  const createUser = container.resolve(CreateUserService);
 
   const user = await createUser.execute(createUserDTO);
 

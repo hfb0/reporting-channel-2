@@ -3,6 +3,7 @@ import 'express-async-errors';
 
 import 'dotenv/config';
 import './shared/database';
+import './shared/container';
 import userRoutes from './users/users.routes';
 import sessionRoutes from './sessions/sessions.routes';
 import complaintRouter from './complaints/complaint.routes';
