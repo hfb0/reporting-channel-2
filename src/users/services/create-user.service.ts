@@ -1,10 +1,10 @@
-import { hash, genSalt } from 'bcryptjs';
 import { injectable, inject } from 'tsyringe';
 
 import User from '../user.entity';
 import AppError from '../../shared/errors/app-error';
 import IUserRepository from '../repository/user-repository.interface';
 import CreateUserDTO from '../dto/create-user.dto';
+import IHashProvider from '../provider/hash-provider/hash-provider.interface';
 
 interface Request {
   name: string;
@@ -18,6 +18,9 @@ class CreateUserService {
   constructor(
     @inject('UserRepository')
     private userRepository: IUserRepository,
+
+    @inject('HashProvider')
+    private hashProvider: IHashProvider,
   ) {}
 
   public async execute(createUserDTO: CreateUserDTO): Promise<User> {
@@ -30,8 +33,9 @@ class CreateUserService {
       throw new AppError('User already exists!', 400);
     }
 
-    const salt = await genSalt(10);
-    createUserDTO.setPasswordHashed(await hash(createUserDTO.password, salt));
+    createUserDTO.setPasswordHashed(
+      await this.hashProvider.generateHash(createUserDTO.password),
+    );
 
     const user = this.userRepository.create(createUserDTO);
 

@@ -5,6 +5,7 @@ import ComplaintRepository from '../../complaints/repository/complaint.repositor
 
 import IUserRepository from '../../users/repository/user-repository.interface';
 import UserRepository from '../../users/repository/user.repository';
+import '../../users/provider';
 
 container.registerSingleton<IComplaintRepository>(
   'ComplaintRepository',

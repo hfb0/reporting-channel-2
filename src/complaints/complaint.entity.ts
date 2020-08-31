@@ -12,7 +12,7 @@ import User from '../users/user.entity';
 @Entity('complaints')
 class Complaint {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @Column()
   title: string;
@@ -39,10 +39,10 @@ class Complaint {
   city: string;
 
   @Column()
-  neighborhood: string;
+  neighborhood?: string;
 
   @Column()
-  street: string;
+  street?: string;
 
   @Column()
   resolved: boolean;

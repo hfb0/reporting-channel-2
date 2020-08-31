@@ -11,6 +11,8 @@ export default class SessionController {
 
     const auth = await createSessionService.execute({ email, password });
 
+    delete auth.user.password;
+
     return res.json(auth);
   }
 }
