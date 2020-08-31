@@ -1,31 +1,50 @@
 import axios from 'axios';
+import 'reflect-metadata';
+import { injectable, inject } from 'tsyringe';
 import LocationPayload from './interfaces/location-payload.interface';
 import ParamsPayload from './interfaces/params-payload.interface';
 import GeocodeQuality from './geocode-quality.enum';
 import mapQuestConfig from '../config/mapquest.config';
 import AppError from '../shared/errors/app-error';
 import CreateAddressDto from './dto/create-address.dto';
+import ICacheProvider from '../shared/container/provider/cache-provider/cache-provider.interface';
 
+@injectable()
 class MapquestService {
+  constructor(
+    @inject('CacheProvider')
+    private cacheProvider: ICacheProvider,
+  ) {}
+
   private baseURL = 'http://www.mapquestapi.com';
 
   private badGranularity = [GeocodeQuality.COUNTRY, GeocodeQuality.STATE];
 
   async findByGeoCode(lat: number, lon: number): Promise<CreateAddressDto> {
-    const geoCodePathURL = 'geocoding/v1/reverse';
+    let location = await this.cacheProvider.recover<CreateAddressDto>(
+      `mpq-${lat}-${lon}`,
+    );
 
-    const params: ParamsPayload = {
-      key: mapQuestConfig.apiKey,
-      location: `${lat}, ${lon}`,
-      thumbMaps: false,
-    };
+    if (!location) {
+      const geoCodePathURL = 'geocoding/v1/reverse';
 
-    const response = await axios.get(geoCodePathURL, {
-      baseURL: this.baseURL,
-      params,
-    });
+      const params: ParamsPayload = {
+        key: mapQuestConfig.apiKey,
+        location: `${lat}, ${lon}`,
+        thumbMaps: false,
+      };
 
-    return this.formatDataToAddress(response.data.results[0].locations);
+      const response = await axios.get(geoCodePathURL, {
+        baseURL: this.baseURL,
+        params,
+      });
+
+      location = this.formatDataToAddress(response.data.results[0].locations);
+
+      await this.cacheProvider.save(`mpq-${lat}-${lon}`, location);
+    }
+
+    return location;
   }
 
   private formatDataToAddress(

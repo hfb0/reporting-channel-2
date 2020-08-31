@@ -15,7 +15,7 @@ export default class ComplaintController {
       req.user.id,
     );
 
-    const mapquestService = new MapquestService();
+    const mapquestService = container.resolve(MapquestService);
     const address = await mapquestService.findByGeoCode(
       complaintDTO.latitude,
       complaintDTO.longitude,

@@ -6,6 +6,8 @@ import ComplaintRepository from '../../complaints/repository/complaint.repositor
 import IUserRepository from '../../users/repository/user-repository.interface';
 import UserRepository from '../../users/repository/user.repository';
 import '../../users/provider';
+import ICacheProvider from './provider/cache-provider/cache-provider.interface';
+import RedisCacheProvider from './provider/cache-provider/redis-cache.provider';
 
 container.registerSingleton<IComplaintRepository>(
   'ComplaintRepository',
@@ -13,3 +15,8 @@ container.registerSingleton<IComplaintRepository>(
 );
 
 container.registerSingleton<IUserRepository>('UserRepository', UserRepository);
+
+container.registerSingleton<ICacheProvider>(
+  'CacheProvider',
+  RedisCacheProvider,
+);
