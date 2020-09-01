@@ -1,5 +1,6 @@
 import express from 'express';
 import { errors } from 'celebrate';
+import cors from 'cors';
 import 'express-async-errors';
 
 import 'dotenv/config';
@@ -9,9 +10,12 @@ import userRoutes from './users/users.routes';
 import sessionRoutes from './sessions/sessions.routes';
 import complaintRouter from './complaints/complaint.routes';
 import errorHandler from './shared/middlewares/error-handler';
+import rateLimiter from './shared/middlewares/rate-limiter';
 
 const app = express();
 
+app.use(rateLimiter);
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.get('/', (req, res) => res.json({ message: 'Hello World!' }));
