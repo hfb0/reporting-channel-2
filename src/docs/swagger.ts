@@ -26,7 +26,7 @@ export default {
       description: 'Local server',
     },
     {
-      url: 'https://app-dev.herokuapp.com/api/v1',
+      url: 'https://senseis.club/api/v1',
       description: 'DEV Env',
     },
   ],
