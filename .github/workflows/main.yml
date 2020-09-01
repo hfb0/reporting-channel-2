@@ -31,7 +31,7 @@ jobs:
           source: ".,!node_modules"
           target: "~/app/reporting-channel-2/"
       
-      - name: Install dependecies on Digital Ocean
+      - name: Run production scripts on Digital Ocean
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -41,23 +41,5 @@ jobs:
           script: |
             cd ~/app/reporting-channel-2/
             yarn
-     
-      - name: Run migrations on Digital Ocean
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          port: ${{ secrets.SSH_PORT }}
-          script: |
-            cd ~/app/reporting-channel-2/
             yarn typeorm migration:run
-      
-      - name: Restart app on Digital Ocean
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          port: ${{ secrets.SSH_PORT }}
-          script: pm2 restart complaint-api
+            pm2 restart complaint-api
