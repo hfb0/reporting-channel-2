@@ -21,7 +21,7 @@ jobs:
       - name: Run build
         run: yarn build
       
-      - name: SCP Command to Transfer Files
+      - name: Copy dist to Digital Ocean
         uses: appleboy/scp-action@v0.1.1
         with:
           host: ${{secrets.SSH_HOST}}
@@ -30,3 +30,34 @@ jobs:
           key: ${{secrets.SSH_KEY}}
           source: ".,!node_modules"
           target: "~/app/reporting-channel-2/"
+      
+      - name: Install dependecies on Digital Ocean
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd ~/app/reporting-channel-2/
+            yarn
+     
+      - name: Run migrations on Digital Ocean
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd ~/app/reporting-channel-2/
+            yarn typeorm migration:run
+      
+      - name: Restart app on Digital Ocean
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: pm2 restart complaint-api
