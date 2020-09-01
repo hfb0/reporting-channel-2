@@ -1,4 +1,5 @@
 import express from 'express';
+import { errors } from 'celebrate';
 import 'express-async-errors';
 
 import 'dotenv/config';
@@ -17,6 +18,7 @@ app.get('/', (req, res) => res.json({ message: 'Hello World!' }));
 app.use('/users', userRoutes);
 app.use('/sessions', sessionRoutes);
 app.use('/complaints', complaintRouter);
+app.use(errors());
 app.use(errorHandler);
 
 app.listen(3333, () => {

@@ -1,5 +1,6 @@
 import { container } from 'tsyringe';
 import { Request, Response } from 'express';
+import { classToClass } from 'class-transformer';
 
 import CreateUserService from './services/create-user.service';
 import CreateUserDTO from './dto/create-user.dto';
@@ -17,8 +18,6 @@ export default class UserController {
 
     const user = await createUser.execute(createUserDTO);
 
-    delete user.password;
-
-    return res.json(user);
+    return res.json(classToClass(user));
   }
 }
