@@ -16,7 +16,8 @@ app.use(rateLimiter);
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(routes);
+app.get('/', (req, res) => res.json({ message: 'Server running!' }));
+app.use('/api/v1/', routes);
 app.use(errors());
 app.use(errorHandler);
 
