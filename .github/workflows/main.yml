@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v1.4.3
+        with:
+          node-version: 12.x
+      
+      - name: Install dependencies
+        run: yarn
+      
+      - name: Run build
+        run: yarn build
+      
+      - name: SCP Command to Transfer Files
+        uses: appleboy/scp-action@v0.1.1
+        with:
+          host: ${{secrets.SSH_HOST}}
+          port: ${{secrets.SSH_PORT}}
+          username: ${{secrets.SSH_USER}}
+          key: ${{secrets.SSH_KEY}}
+          source: "dist"
+          target: "test"
