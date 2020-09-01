@@ -4,8 +4,17 @@ import { container } from 'tsyringe';
 import CreateComplaintService from './services/create-complaint.service';
 import CreateComplaintDTO from './dto/create-complaint.dto';
 import MapquestService from '../mapquest/mapquest.service';
+import ListComplaintService from './services/list-complaint.service';
 
 export default class ComplaintController {
+  async index(req: Request, res: Response): Promise<Response> {
+    const listComplaintService = container.resolve(ListComplaintService);
+
+    const complaints = await listComplaintService.execute(req.user.id);
+
+    return res.status(201).json(complaints);
+  }
+
   async create(req: Request, res: Response): Promise<Response> {
     const complaintDTO = new CreateComplaintDTO(
       req.body.title,

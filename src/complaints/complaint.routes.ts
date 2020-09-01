@@ -9,6 +9,8 @@ const complaintController = new ComplaintController();
 
 complaintRouter.use(ensureAuth);
 
+complaintRouter.get('/', complaintController.index);
+
 complaintRouter.post(
   '/',
   celebrate({
@@ -21,4 +23,5 @@ complaintRouter.post(
   }),
   complaintController.create,
 );
+
 export default complaintRouter;
