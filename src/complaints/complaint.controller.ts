@@ -12,7 +12,7 @@ export default class ComplaintController {
 
     const complaints = await listComplaintService.execute(req.user.id);
 
-    return res.status(201).json(complaints);
+    return res.status(200).json(complaints);
   }
 
   async create(req: Request, res: Response): Promise<Response> {
